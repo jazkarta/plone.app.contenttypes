@@ -469,8 +469,9 @@ def link_items(  # noqa
         target_uid = IUUID(target_obj)
         targetUIDs = [ref.targetUID for ref in reference_catalog.getReferences(
             source_obj, relationship)]
-        if target_uid in targetUIDs:
+        if target_uid in targetUIDs and source_obj.portal_type in DEFAULT_TYPES:
             # Drop relation since the old ones are most likely broken.
+            # Do NOT touch custom content type relations.
             reference_catalog.deleteReference(
                 source_obj, target_uid, relationship)
 
