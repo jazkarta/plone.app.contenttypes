@@ -107,6 +107,8 @@
       name="plone.app.contenttypes.migration.changed_base_classes"
       provides="zope.schema.interfaces.IVocabularyFactory" />
 
-  <adapter name="nullmigrator" factory=".migration.BaseCustomMigator"/>
+  <adapter name="nullmigrator" factory=".migration.BaseCustomMigrator"/>
+
+  <adapter name="facetedmigrator" factory=".faceted.FacetedNavigationMigrator"/>
 
 </configure>

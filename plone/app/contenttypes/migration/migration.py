@@ -69,7 +69,7 @@ class ICustomMigrator(Interface):
 
 @implementer(ICustomMigrator)
 @adapter(Interface)
-class BaseCustomMigator(object):
+class BaseCustomMigrator(object):
     """Base custom migration class. Does nothing.
 
     You can use this as base class for your custom migrator adapters.
