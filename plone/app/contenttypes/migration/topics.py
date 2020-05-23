@@ -11,6 +11,7 @@ the default migration to migrate Topics with Subtopics.
 from DateTime import DateTime
 from plone.app.contenttypes.behaviors.collection import ICollection
 from plone.app.contenttypes.migration.field_migrators import migrate_richtextfield  # noqa: E501
+from plone.app.contenttypes.migration.migration import ICustomMigrator
 from plone.app.contenttypes.upgrades import LISTING_VIEW_MAPPING
 from plone.app.querystring.interfaces import IQuerystringRegistryReader
 from plone.registry.interfaces import IRegistry
@@ -19,6 +20,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.contentmigration.inplace import InplaceCMFFolderMigrator
 from Products.contentmigration.inplace import InplaceCMFItemMigrator
 from Products.contentmigration.walker import CustomQueryWalker
+from zope.component import getAdapters
 from zope.component import getUtility
 from zope.component import queryAdapter
 from zope.dottedname.resolve import resolve
@@ -557,6 +559,12 @@ class TopicMigrator(InplaceCMFItemMigrator):
         if uid and queryAdapter(self.new, IMutableUUID):
             IMutableUUID(self.new).set(str(uid))
 
+    def migrate_custom(self):
+        """Get all ICustomMigrator registered migrators and run the migration.
+        """
+        for _, migrator in getAdapters((self.old,), ICustomMigrator):
+            migrator.migrate(self.old, self.new)
+
     def last_migrate_layout(self):
         """Migrate the layout (view method).
 
@@ -664,6 +672,12 @@ class FolderishTopicMigrator(InplaceCMFFolderMigrator):
         uid = self.UID
         if uid and queryAdapter(self.new, IMutableUUID):
             IMutableUUID(self.new).set(str(uid))
+
+    def migrate_custom(self):
+        """Get all ICustomMigrator registered migrators and run the migration.
+        """
+        for _, migrator in getAdapters((self.old,), ICustomMigrator):
+            migrator.migrate(self.old, self.new)
 
     def last_migrate_layout(self):
         """Migrate the layout (view method).
