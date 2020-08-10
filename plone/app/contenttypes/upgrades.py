@@ -15,6 +15,7 @@ LISTING_VIEW_MAPPING = {  # OLD (AT and old DX) : NEW
     'atct_album_view': 'album_view',
     'atct_topic_view': 'listing_view',
     'collection_view': 'listing_view',
+    'facetednavigation_view': 'facetednavigation_view',
     'folder_album_view': 'album_view',
     'folder_full_view': 'full_view',
     'folder_listing': 'listing_view',

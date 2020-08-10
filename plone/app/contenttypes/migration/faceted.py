@@ -9,6 +9,7 @@ from eea.facetednavigation.criteria.handler import Criteria
 from eea.facetednavigation.criteria.interfaces import ICriteria
 from eea.facetednavigation.indexes.language.interfaces import ILanguageWidgetAdapter
 from eea.facetednavigation.interfaces import IFacetedNavigable
+from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from eea.facetednavigation.settings.interfaces import IDisableSmartFacets
 from eea.facetednavigation.settings.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.settings.interfaces import IHidePloneRightColumn
@@ -38,6 +39,8 @@ class FacetedNavigationMigrator(object):
             logger.info("Migrating faceted navigation criteria for: %s" % new.absolute_url_path())
             criteria = Criteria(new)
             criteria._update(ICriteria(old).criteria)
+
+            IFacetedLayout(new).update_layout('listing_view')
 
         interfaces = [
             IFacetedNavigable,

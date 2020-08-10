@@ -339,6 +339,16 @@ def get_all_references(context):
     return results
 
 
+REFERENCE_FIELDS = {
+        'author': 'authors',
+        'editor': 'editors',
+        'similar title': 'similarTitles',
+        'series': 'series',
+        'contributor': 'otherContributors',
+        'translator': 'translators',
+}
+
+
 def restore_references(context):
     """Recreate all references stored in an annotation on the context.
 
@@ -352,7 +362,12 @@ def restore_references(context):
         relationship = ref['relationship']
         if source_obj and target_obj:
             relationship = ref['relationship']
-            link_items(context, source_obj, target_obj, relationship)
+            fieldname = 'relatedItems'
+            if relationship in REFERENCE_FIELDS:
+                fieldname = REFERENCE_FIELDS[relationship]
+                if relationship == 'contributor' and source_obj.portal_type == 'Book':
+                    fieldname = 'otherContributors'
+            link_items(context, source_obj, target_obj, relationship, fieldname)
         else:
             logger.warn(
                 'Could not restore reference from uid '
@@ -457,6 +472,9 @@ def link_items(  # noqa
             return
         accessor = field.getAccessor(source_obj)
         existing_at_relations = accessor()
+
+        if not field.multiValued:
+            existing_at_relations = [existing_at_relations]
 
         if not isinstance(existing_at_relations, list):
             existing_at_relations = [i for i in existing_at_relations]
